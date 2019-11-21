@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping("/api")
 public class MusicController {
@@ -26,14 +29,18 @@ public class MusicController {
         - Parâmetros:​ ​ QueryString: {filtro} string - Opcional
         - Retorno: ​ Array do objeto “Musica” do modelo Json
         - Erros tratados: ​ 204 ​ com array vazio​ ​ quando não houver dados e ​ 400 ​ quando caracteres de busca
-     */
-
+     */	
+	
      @Autowired
      private MusicRepository musicRepository;
 
      @Autowired
      private ArtistasRepository artistasRepository;
-
+    
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "array vazio​ ​ quando não houver dados"),
+        @ApiResponse(code = 400, message = "400 ​ quando caracteres de busca")
+    })
      @GetMapping("/musicas")
      private ResponseEntity getByFilter(@RequestParam("filtro") final String filtro) {
         List<Music> musics = new ArrayList<>(); 
