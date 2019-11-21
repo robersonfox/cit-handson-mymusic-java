@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.ciandt.handson.mymusic.model.Artista;
 import com.ciandt.handson.mymusic.model.Music;
+import com.ciandt.handson.mymusic.repository.ArtistasRepository;
 import com.ciandt.handson.mymusic.repository.MusicRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/musicas")
+@RequestMapping("/api")
 public class MusicController {
 
     /**
@@ -31,8 +31,11 @@ public class MusicController {
      @Autowired
      private MusicRepository musicRepository;
 
-     @GetMapping
-     private ResponseEntity getByFilter(@RequestParam("filtro") String filtro) {
+     @Autowired
+     private ArtistasRepository artistasRepository;
+
+     @GetMapping("/musicas")
+     private ResponseEntity getByFilter(@RequestParam("filtro") final String filtro) {
         List<Music> musics = new ArrayList<>(); 
 
         // Verifica se menor que 3 caracteres
@@ -40,16 +43,8 @@ public class MusicController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Music m = new Music();
-        Artista a = new Artista();
-        a.setNome(filtro);
-        m.setNome(filtro);
-        m.setArtista(a);
-
-        final Example criterio = Example.of(m);
-
         try {
-            musics = musicRepository.findAll(criterio);
+            musics = musicRepository.getByFilter("%" + filtro.toLowerCase() + "%");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(musics);
         }
@@ -57,4 +52,27 @@ public class MusicController {
         return ResponseEntity.ok().body(musics);
      }
 
+     @GetMapping("/all")
+     private ResponseEntity getAll() {
+        List<Music> musics = new ArrayList<>(); 
+
+        musics = musicRepository.findAll();
+        try {
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(musics);
+        }
+
+        return ResponseEntity.ok().body(musics);
+     }
+
+     @GetMapping("/all-artists")
+     private ResponseEntity getAllArtists() {
+
+         try {
+            List<Artista> artistas = artistasRepository.findAll();
+            return ResponseEntity.ok().body(artistas);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ArrayList<Artista>());
+        }
+     }
 }
