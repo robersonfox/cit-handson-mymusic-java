@@ -13,16 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/*
-"id": "string",
-"nome": "string",
-"artistaId": "string",
-"artista": {
-"id": "string",
-"nome": "string"
-}
-*/
-
 @Entity
 @Setter
 @Getter

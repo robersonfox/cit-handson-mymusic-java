@@ -29,21 +29,21 @@ public class MusicController {
         - Parâmetros:​ ​ QueryString: {filtro} string - Opcional
         - Retorno: ​ Array do objeto “Musica” do modelo Json
         - Erros tratados: ​ 204 ​ com array vazio​ ​ quando não houver dados e ​ 400 ​ quando caracteres de busca
-     */	
-	
+     */
+
      @Autowired
      private MusicRepository musicRepository;
 
      @Autowired
      private ArtistasRepository artistasRepository;
-    
+
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "array vazio​ ​ quando não houver dados"),
         @ApiResponse(code = 400, message = "400 ​ quando caracteres de busca")
     })
      @GetMapping("/musicas")
      private ResponseEntity getByFilter(@RequestParam("filtro") final String filtro) {
-        List<Music> musics = new ArrayList<>(); 
+        List<Music> musics = new ArrayList<>();
 
         // Verifica se menor que 3 caracteres
         if (filtro.length() < 3) {
@@ -61,7 +61,7 @@ public class MusicController {
 
      @GetMapping("/all")
      private ResponseEntity getAll() {
-        List<Music> musics = new ArrayList<>(); 
+        List<Music> musics = new ArrayList<>();
 
         musics = musicRepository.findAll();
         try {
